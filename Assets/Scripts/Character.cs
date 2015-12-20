@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
+using JobstickSDK;
 
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour {
@@ -14,6 +15,8 @@ public class Character : MonoBehaviour {
 
     public bool rotateByLean = false;
 
+    public string addressJobstick;
+
     // Use this for initialization
     void Start () {
         characterController = GetComponent<CharacterController>();
@@ -21,10 +24,18 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-       // MoveForward(CrossPlatformInputManager.GetAxis("Vertical"));
-       // MoveRight(CrossPlatformInputManager.GetAxis("Horizontal"));
+        // MoveForward(CrossPlatformInputManager.GetAxis("Vertical"));
+        // MoveRight(CrossPlatformInputManager.GetAxis("Horizontal"));
 
-        if (characterController.isGrounded)
+        JobstickAngle angle = Jobstick.controller.GetAnglesToPlayerFromAddress(addressJobstick);
+        if (angle != null)
+        {
+            string info = string.Format("{0}\nax = {1}\nay = {2}\naz = {3}", addressJobstick, angle.ax, angle.ay, angle.az);
+
+            Debug.Log(info);
+        }
+
+            if (characterController.isGrounded)
         {
             // We are grounded, so recalculate
             // move direction directly from axes
