@@ -1,0 +1,10 @@
+{
+    "group": "JobstickPlugin",
+    "libs": [],
+    "frameworks": ["CoreBluetooth.framework"],
+    "headerpaths": [],                    
+    "files":   [],
+    "folders": [],    
+    "excludes": [],
+    "linker_flags": []
+}
