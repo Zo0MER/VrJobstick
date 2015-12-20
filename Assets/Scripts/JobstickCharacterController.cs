@@ -53,7 +53,7 @@ public class JobstickCharacterController : MonoBehaviour
     private void OnStartSearchDevice()
     {
         if (scanningLabel)
-            scanningLabel.gameObject.SetActive(false);
+            scanningLabel.gameObject.SetActive(true);
     }
 
     private void OnDisconnectPlayerEvent(string s)
