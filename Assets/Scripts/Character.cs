@@ -33,13 +33,13 @@ public class Character : MonoBehaviour
         JobstickAngle angle = Jobstick.controller.GetAnglesToPlayerFromAddress(addressJobstick);
         if (angle != null)
         {
-            string info = string.Format("{0}\nax = {1}\nay = {2}\naz = {3}", addressJobstick, angle.ax, angle.ay, angle.az);
+            string info = string.Format("{0}\nax = {1}\nay = {2}\naz = {3}", addressJobstick, angle.fixedX, angle.fixedY, angle.fixedZ);
             Debug.Log(info);    
             if (!rotateByLean)
             {
                 transform.Rotate(0, CrossPlatformInputManager.GetAxis("Rotate"), 0);
-                moveDirection.x = angle.ax;
-                moveDirection.z = angle.ay;
+                moveDirection.x = angle.fixedX;
+                moveDirection.z = angle.fixedZ;
 
                 //howerboard.transform.localRotation = Quaternion.Euler(
                 //   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,

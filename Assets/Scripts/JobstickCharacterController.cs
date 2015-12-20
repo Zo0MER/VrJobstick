@@ -46,12 +46,14 @@ public class JobstickCharacterController : MonoBehaviour
 
     private void OnStopSearchDevice()
     {
-        if (scanningLabel)
-            scanningLabel.gameObject.SetActive(false);
+        Debug.Log("Stop search devices");
+        
     }
 
     private void OnStartSearchDevice()
     {
+        Debug.Log("Start search devices");
+
         if (scanningLabel)
             scanningLabel.gameObject.SetActive(true);
     }
@@ -63,6 +65,8 @@ public class JobstickCharacterController : MonoBehaviour
 
     private void OnConnectPlayerEvent(string s)
     {
+        if (scanningLabel)
+            scanningLabel.gameObject.SetActive(false);
         if (Jobstick.controller.GetCountPlayers() < maxPlayers)
         {
             Jobstick.controller.StartSearchDevices();
