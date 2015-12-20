@@ -10,14 +10,17 @@ public class Character : MonoBehaviour
     public GameObject howerboard;
     public float leanAngle = 45.0f;
     CharacterController characterController;
-    public float maxSpeed = 1.0f;
+    public float maxSpeed = 1f;
     Vector3 moveDirection;
     public float gravity = 9.8f;
     public Text[] axis;
+    public Button calibrate;
 
-    Vector3 delta = new Vector3(9999, 9999);
+    Vector3 delta = new Vector3(9999, 0, 9999);
 
     public bool rotateByLean = false;
+
+    bool isCalibrated = false;
 
     public string addressJobstick;
 
@@ -34,6 +37,8 @@ public class Character : MonoBehaviour
         {
             delta = new Vector3(angle.fixedX, 0.0f, angle.fixedY);
         }
+        calibrate.transform.localScale = Vector3.zero;
+        isCalibrated = true;
     }
 
     // Update is called once per frame
@@ -45,29 +50,30 @@ public class Character : MonoBehaviour
         // MoveRight(CrossPlatformInputManager.GetAxis("Horizontal"));
 
         JobstickAngle angle = Jobstick.controller.GetAnglesToPlayerFromAddress(addressJobstick);
-        if (angle != null && delta == new Vector3(9999, 9999))
+        if (angle != null)
         {
 
             string info = string.Format("{0}\nax = {1}\nay = {2}\naz = {3}", addressJobstick, angle.fixedX, angle.fixedY, angle.fixedZ);
             Debug.Log(info);    
-            if (!rotateByLean)
+            if (!rotateByLean)// && isCalibrated)
             {
 
-                moveDirection -= delta;
-
-                if (angle.fixedX < 5) moveDirection.x = 0;
-                if (angle.fixedZ < 5) moveDirection.z = 0;
-
-                axis[0].text = angle.fixedX.ToString();
-                axis[1].text = angle.fixedY.ToString();
-                axis[2].text = angle.fixedZ.ToString();
-                axis[3].text = moveDirection.x.ToString();
-                axis[4].text = moveDirection.y.ToString();
-                axis[5].text = moveDirection.z.ToString();
+                moveDirection.x = angle.fixedX;// - delta.x;
+                moveDirection.z = angle.fixedY;// - delta.z;
 
 
-                moveDirection = transform.TransformDirection(moveDirection);
-                moveDirection *= maxSpeed;
+                //if (Mathf.Abs(angle.fixedX) < 3) moveDirection.x = 0;
+                //if (Mathf.Abs(angle.fixedY) < 3) moveDirection.z = 0;
+
+                axis[0].text = "fx = " + angle.fixedX.ToString();
+                axis[1].text = "fy = " + angle.fixedY.ToString();
+
+
+
+                //moveDirection = transform.TransformDirection(moveDirection)* maxSpeed;
+
+                axis[2].text = "x = " + moveDirection.x.ToString();
+                axis[3].text = "y = " + moveDirection.z.ToString();
 
                 //howerboard.transform.localRotation = Quaternion.Euler(
                 //   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,
@@ -88,6 +94,6 @@ public class Character : MonoBehaviour
         moveDirection.y -= gravity * Time.deltaTime;
 
         // Move the controller
-        characterController.Move(moveDirection * Time.deltaTime);
+        characterController.Move(moveDirection * maxSpeed * Time.deltaTime);
     }
 }
