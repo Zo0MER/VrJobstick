@@ -8,10 +8,14 @@ using Jobstick = JobstickSDK.Jobstick;
 public class JobstickCharacterController : MonoBehaviour
 {
 
+    Character character;
     private int maxPlayers = 1;
+    public Text scanningLabel;
 
     void Start()
     {
+        character = GetComponent<Character>();
+
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         ConnectEvents();
@@ -42,12 +46,14 @@ public class JobstickCharacterController : MonoBehaviour
 
     private void OnStopSearchDevice()
     {
-
+        if (scanningLabel)
+            scanningLabel.gameObject.SetActive(false);
     }
 
     private void OnStartSearchDevice()
     {
-
+        if (scanningLabel)
+            scanningLabel.gameObject.SetActive(false);
     }
 
     private void OnDisconnectPlayerEvent(string s)
@@ -67,6 +73,7 @@ public class JobstickCharacterController : MonoBehaviour
             WaitPlayers();
         }
 
+        character.addressJobstick = s;
     }
 
     void WaitPlayers()

@@ -4,7 +4,8 @@ using UnityStandardAssets.CrossPlatformInput;
 using JobstickSDK;
 
 [RequireComponent(typeof(CharacterController))]
-public class Character : MonoBehaviour {
+public class Character : MonoBehaviour
+{
 
     public GameObject howerboard;
     public float leanAngle = 45.0f;
@@ -18,12 +19,14 @@ public class Character : MonoBehaviour {
     public string addressJobstick;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         characterController = GetComponent<CharacterController>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         // MoveForward(CrossPlatformInputManager.GetAxis("Vertical"));
         // MoveRight(CrossPlatformInputManager.GetAxis("Horizontal"));
 
@@ -31,17 +34,53 @@ public class Character : MonoBehaviour {
         if (angle != null)
         {
             string info = string.Format("{0}\nax = {1}\nay = {2}\naz = {3}", addressJobstick, angle.ax, angle.ay, angle.az);
+            Debug.Log(info);    
+            if (!rotateByLean)
+            {
+                transform.Rotate(0, CrossPlatformInputManager.GetAxis("Rotate"), 0);
+                moveDirection.x = angle.ax;
+                moveDirection.z = angle.ay;
 
+                //howerboard.transform.localRotation = Quaternion.Euler(
+                //   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,
+                //   CrossPlatformInputManager.GetAxis("Horizontal") * leanAngle);
+            }
+            else
+            {
+                transform.Rotate(0, CrossPlatformInputManager.GetAxis("Horizontal"), 0);
+                //howerboard.transform.localRotation = Quaternion.Euler(
+                //   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,
+                //   CrossPlatformInputManager.GetAxis("Horizontal") * leanAngle);
+            }
             Debug.Log(info);
         }
+        else
+        {
+            if (!rotateByLean)
+            {
+                transform.Rotate(0, CrossPlatformInputManager.GetAxis("Rotate"), 0);
+                moveDirection.x = CrossPlatformInputManager.GetAxis("Horizontal");
 
-            if (characterController.isGrounded)
+                howerboard.transform.localRotation = Quaternion.Euler(
+                   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,
+                   CrossPlatformInputManager.GetAxis("Horizontal") * leanAngle);
+            }
+            else
+            {
+                transform.Rotate(0, CrossPlatformInputManager.GetAxis("Horizontal"), 0);
+                howerboard.transform.localRotation = Quaternion.Euler(
+                   270.0f + CrossPlatformInputManager.GetAxis("Vertical") * leanAngle, 0.0f,
+                   CrossPlatformInputManager.GetAxis("Horizontal") * leanAngle);
+            }
+        }
+
+        if (characterController.isGrounded)
         {
             // We are grounded, so recalculate
             // move direction directly from axes
             moveDirection = new Vector3(0, 0, CrossPlatformInputManager.GetAxis("Vertical"));
 
-            if (!rotateByLean )
+            if (!rotateByLean)
             {
                 transform.Rotate(0, CrossPlatformInputManager.GetAxis("Rotate"), 0);
                 moveDirection.x = CrossPlatformInputManager.GetAxis("Horizontal");
